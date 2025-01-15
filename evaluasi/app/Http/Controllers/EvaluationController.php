@@ -18,33 +18,35 @@ use Illuminate\Support\Facades\DB;
 
 class EvaluationController extends Controller
 {
-    public function landingPage()
+    public function landingPage(Request $request)
     {
         // Fetch survey questions
         $surveyQuestions = LayananAlumniQuestion::where('type', 'Survey')->get();
-    
+        
         $chartData = [];
         foreach ($surveyQuestions as $question) {
             $responses = LayananAlumniResponse::where('question_id', $question->id)
                 ->select('response_value', DB::raw('COUNT(*) as count'))
                 ->groupBy('response_value')
                 ->pluck('count', 'response_value');
-    
+
             // Ensure responses for values 1, 2, 3, and 4 are always present
             $values = [1, 2, 3, 4];
             $counts = array_map(fn($val) => $responses[$val] ?? 0, $values);
-    
+
             $chartData[] = [
                 'question' => $question->text,
                 'labels' => $values,
                 'data' => $counts,
             ];
         }
+
         // Convert $chartData into a collection
         $chartData = collect($chartData);
         
         return view('landing', compact('chartData'));
     }
+
     
 
     public function layananAlumni()
@@ -109,13 +111,8 @@ class EvaluationController extends Controller
         LayananAlumniResponse::insert($otherResponses);
 
         // Redirect back with a success message
-        return redirect()->route('home')->with('success', 'Evaluasi layanan berhasil dikumpulkan.');
+        return redirect()->route('landing')->with('success', 'Evaluasi layanan berhasil dikumpulkan.');
     }
-
-
-
-
-
 
 
     public function importLayananAlumni(Request $request)
@@ -132,4 +129,74 @@ class EvaluationController extends Controller
     }
 
 
+    
+
+    public function tracerStudy()
+    {
+    
+        // Group questions by type
+        $groupedQuestions = TracerStudyQuestion::all()->groupBy('type');
+    
+        // Fetch all options and map them by question_id for easy access in the view
+        $options = TracerStudyOption::all()->groupBy('question_id');
+    
+        // Pass data to the view
+        return view('tracer.study', compact('groupedQuestions', 'options'));
     }
+    
+
+    public function tracerSubmit(Request $request)
+    {
+        // Validate that responses are provided
+        $request->validate([
+            'responses' => 'required|array',
+        ]);
+
+        // Map question IDs (type = User) to LayananAlumni columns
+        $userFieldMap = [
+            1 => 'name',
+            2 => 'prodi',
+            3 => 'tahun_lulus',
+            4 => 'department',
+            5 => 'divisi',
+            6 => 'tempat',
+            7 => 'plant',
+
+        ];
+
+        // Initialize data for layanan_alumnis table
+        $tracerStudyData = [];
+
+        // Prepare to save other responses
+        $otherResponses = [];
+
+        // Loop through submitted responses
+        foreach ($request->responses as $questionId => $responseValue) {
+            if (array_key_exists($questionId, $userFieldMap)) {
+                // Map User-type question responses to layanan_alumnis columns
+                $column = $userFieldMap[$questionId];
+                $tracerStudyData[$column] = $responseValue;
+            } else {
+                // Collect other responses for LayananResponse table
+                $otherResponses[] = [
+                    'question_id' => $questionId,
+                    'response_value' => $responseValue,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        }
+
+        // Insert into layanan_alumnis table
+        $alumni = TracerStudy::create($tracerStudyData);
+
+        // Insert other responses into layanan_responses table, linked to the created alumni record
+        foreach ($otherResponses as &$response) {
+            $response['alumni_id'] = $alumni->id; // Associate with the alumni ID
+        }
+        TracerStudyResponse::insert($otherResponses);
+
+        // Redirect back with a success message
+        return redirect()->route('landing')->with('success', 'Evaluasi layanan berhasil dikumpulkan.');
+    }
+}

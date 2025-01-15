@@ -28,10 +28,10 @@ class LayananAlumniImport implements ToCollection
 
             // Map other responses to LayananAlumniResponse
             $otherResponses = [];
-            foreach ($row->slice(5) as $questionIndex => $responseValue) {
+            foreach ($row->slice(4) as $questionIndex => $responseValue) {
                 $otherResponses[] = [
                     'alumni_id' => $alumni->id,                // Link to layanan_alumnis
-                    'question_id' => $questionIndex + 4,       // Adjust question ID (offset for question order)
+                    'question_id' => $questionIndex + 1,       // Adjust question ID (offset for question order)
                     'response_value' => $responseValue,        // Response value
                     'created_at' => now(),
                     'updated_at' => now(),

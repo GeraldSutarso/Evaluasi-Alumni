@@ -3,6 +3,11 @@
 @section('content')
 <!-- Main container with overlay -->
 <div class="relative min-h-screen">
+    {{-- <form action="{{ route('layanan.alumni.import') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <input type="file" name="file" required>
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Import Data</button>
+    </form> --}}
     <!-- Background Banner -->
     <div class="absolute inset-0">
         <img src="{{ asset('img\Banner (1280x960).jpeg') }}" alt="Background Banner" class="w-full h-full object-cover">

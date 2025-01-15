@@ -9,74 +9,104 @@
         <div class="absolute inset-0 bg-black bg-opacity-50"></div>
     </div>
 
+    
     <!-- Content Container -->
     <div class="relative z-10 container mx-auto px-4 py-8">
       <h1 class="text-4xl font-semibold font-mono text-center text-white mb-8">Survey Alumni</h1>
+{{-- 
+        <form action="{{ route('layanan.alumni.import') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <input type="file" name="file" required>
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Import Data</button>
+        </form> --}}
+
+
         <!-- Cards Section -->
         <div class="flex flex-col md:flex-row justify-center items-center gap-8 mb-16 mt-8">
             <!-- Tracer Study Card -->
             <div class="w-full md:w-1/3 bg-white bg-opacity-90 rounded-3xl shadow-lg p-8 transition-transform hover:scale-105">
                 <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Tracer Study</h2>
+                <div class="flex justify-center mb-4">
+                    <img src="{{ asset('img/analysis.png') }}" alt="Tracer Study Icon" class="w-16 h-16 mb-1">
+                </div>
                 <div class="flex justify-center">
-                    <a href="/tracer-study" class="mt-4 px-6 py-2 bg-[#992424] text-white rounded-lg hover:bg-[#b93232] transition-colors">
+                    <a href="/tracer-study" class="mt-2 px-6 py-2 bg-[#992424] text-white rounded-lg hover:bg-[#b93232] transition-colors">
                         Mulai Survey
                     </a>
                 </div>
             </div>
-
+        
             <!-- Evaluasi Layanan Card -->
             <div class="w-full md:w-1/3 bg-white bg-opacity-90 rounded-3xl shadow-lg p-8 transition-transform hover:scale-105">
                 <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Evaluasi Layanan</h2>
+                <div class="flex justify-center mb-4">
+                    <img src="{{ asset('img/check-list.png') }}" alt="Evaluasi Layanan Icon" class="w-16 h-16 mb-1">
+                </div>
                 <div class="flex justify-center">
-                    <a href="{{ route('layanan-alumni') }}" class="mt-4 px-6 py-2 bg-[#992424] text-white rounded-lg hover:bg-[#b93232] transition-colors">
+                    <a href="{{ route('layanan-alumni') }}" class="mt-2 px-6 py-2 bg-[#992424] text-white rounded-lg hover:bg-[#b93232] transition-colors">
                         Mulai Survey
                     </a>
                 </div>
             </div>
         </div>
+        
 
+        <!-- Chart Carousel Section -->
         <div class="relative z-10 container mx-auto px-4 py-8">
             <h1 class="text-4xl font-semibold font-mono text-center text-white mb-8">Survey Layanan AKTI</h1>
         
-            <!-- Carousel Section -->
-            <div class="mx-auto bg-gray-100 bg-opacity-80 shadow-lg rounded-lg p-6 w-[90%] h-[600px]">
-                <h2 class="text-2xl font-semibold text-gray-800 text-center mb-4">Survey Results</h2>
-                
-                <div class="swiper-container">
+            <!-- Carousel start -->
+            <div class="mx-auto bg-gray-100 bg-opacity-80 shadow-lg rounded-lg p-6 w-[90%] h-[600px] relative overflow-hidden">
+                <h2 class="text-2xl font-semibold text-gray-800 text-center mb-5">Isi Survey</h2>
+            
+                <div class="swiper-container h-90">
                     <div class="swiper-wrapper">
-                        @foreach ($chartData->chunk(3) as $chunk)
-                        <div class="swiper-slide flex justify-around items-center">
-                            @foreach ($chunk as $index => $chart)
-                            <div class="w-[300px] h-[300px] bg-gray-100 rounded-lg p-4 shadow-md">
-                                <h3 class="text-sm font-sans font-semibold text-gray-800 text-center mb-2">{{ $chart['question'] }}</h3>
-                                <canvas id="chart{{ $index }}"></canvas>
+                        @foreach ($chartData->chunk(1) as $chunk)
+                        <div class="swiper-slide flex flex-col justify-between  gap-y-2">
+                            <!-- Row for Questions -->
+                            <div class="flex flex-wrap justify-around items-center w-full">
+                                @foreach ($chunk as $chart)
+                                <div class="w-[800px] h-[100px] md:w-[600px] md:h-[100px] sm:w-[300px] sm:h-[100px] text-center text-sm font-sans font-semibold text-gray-800">
+                                    {{ $chart['question'] }}
+                                </div>
+                                @endforeach
                             </div>
-                            @endforeach
+                            
+                            <!-- Row for Charts -->
+                            <div class="flex flex-wrap justify-around items-center w-full">
+                                @foreach ($chunk as $index => $chart)
+                                <div class="w-[800px] h-[300px] md:w-[600px] md:h-[300px] sm:w-[300px] sm:h-[300px] flex items-center justify-center bg-gray-100 rounded-lg p-4 shadow-md">
+                                    <canvas id="chart{{ $index }}" class="w-full h-full"></canvas>
+                                </div>
+                                @endforeach
+                            </div>
+                            
                         </div>
                         @endforeach
                     </div>
-        
-                    <!-- Navigation -->
-                    <div class="flex justify-between items-center mt-4">
-                        <button class="swiper-prev text-xl px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-700">&lt;</button>
-                        <button class="swiper-next text-xl px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-700">&gt;</button>
-                    </div>
-        
-                    <!-- Pagination -->
-                    <div class="swiper-pagination mt-4"></div>
                 </div>
+                <button class="swiper-prev absolute top-1/2 left-[10px] transform -translate-y-1/2 text-xl px-4 py-2 bg-red-900 text-white rounded-full hover:bg-red-950 z-20">&lt;</button>
+                <button class="swiper-next absolute top-1/2 right-[10px] transform -translate-y-1/2 text-xl px-4 py-2 bg-red-900 text-white rounded-full hover:bg-red-950 z-20">&gt;</button>
+                <!-- Pagination -->
+                <div class="swiper-pagination mt-4"></div>
             </div>
+            <!-- Navigation Buttons Outside the Carousel -->
         </div>
     </div>
-</div>
+</div>      
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // Initialize Swiper
     const swiper = new Swiper('.swiper-container', {
-        loop: false,
-        slidesPerView: 1, // Show one slide (with 3 charts) at a time
+        loop: true, // Loop back to the first slide
+        slidesPerView: 1, // Show 1 slide (with 3 charts) at a time
+        autoplay: {
+            delay: 10000, // Auto-slide every 10 seconds
+            disableOnInteraction: false, // Continue autoplay after manual navigation
+        },
         pagination: {
             el: '.swiper-pagination',
-            clickable: true,
+            clickable: true, // Allow pagination dots to be clickable
         },
         navigation: {
             nextEl: '.swiper-next',
@@ -84,6 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
     });
 
+    // Render charts
     const chartData = @json($chartData);
 
     chartData.forEach((chart, index) => {
@@ -127,6 +158,5 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-
 </script>
 @endsection
