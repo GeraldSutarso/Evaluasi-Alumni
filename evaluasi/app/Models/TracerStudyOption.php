@@ -9,6 +9,7 @@ class TracerStudyOption extends Model
     use HasFactory;
 
     protected $table = 'tracer_study_options';
+    
 
     protected $fillable = [
         'id',

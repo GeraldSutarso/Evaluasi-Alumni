@@ -14,8 +14,12 @@ return new class extends Migration
         Schema::create('tracer_studies', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // The name of the tracer study
+            $table->string('prodi');
             $table->string('divisi'); // The division of the tracer study
             $table->string('tahun_lulus'); // The year of the tracer study
+            $table->string('department'); // The department of the tracer study
+            $table->string('tempat'); // The place of the tracer study
+            $table->string('plant'); // The plant of the tracer study
             $table->timestamps();
         });
     }

@@ -12,42 +12,80 @@ use App\Models\TracerStudyQuestion;
 use App\Models\TracerStudyResponse;
 use App\Models\TracerStudyOption;
 use App\Imports\LayananAlumniImport;
+use App\Imports\TracerStudyImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 
 class EvaluationController extends Controller
 {
+
     public function landingPage(Request $request)
     {
-        // Fetch survey questions
-        $surveyQuestions = LayananAlumniQuestion::where('type', 'Survey')->get();
-        
-        $chartData = [];
-        foreach ($surveyQuestions as $question) {
-            $responses = LayananAlumniResponse::where('question_id', $question->id)
-                ->select('response_value', DB::raw('COUNT(*) as count'))
-                ->groupBy('response_value')
-                ->pluck('count', 'response_value');
-
-            // Ensure responses for values 1, 2, 3, and 4 are always present
-            $values = [1, 2, 3, 4];
-            $counts = array_map(fn($val) => $responses[$val] ?? 0, $values);
-
-            $chartData[] = [
-                'question' => $question->text,
-                'labels' => $values,
-                'data' => $counts,
-            ];
-        }
-
-        // Convert $chartData into a collection
-        $chartData = collect($chartData);
-        
+        Session::put('admin_alumni', true);
+    
+        // Fetch Layanan Alumni survey questions (Bar Chart)
+        $layananAlumniQuestions = LayananAlumniQuestion::where('type', 'Survey')->get();
+        $layananAlumniChartData = $this->prepareChartData($layananAlumniQuestions, LayananAlumniResponse::class, [1, 2, 3, 4]); // Values 1-4
+    
+        // Fetch Tracer Study survey questions (Bar Chart)
+        $tracerStudyQuestions = TracerStudyQuestion::where('type', 'Survey')->get();
+        $tracerStudyChartData = $this->prepareChartData($tracerStudyQuestions, TracerStudyResponse::class, [1, 2, 3, 4, 5]); // Values 1-5
+    
+        // Fetch Tracer Study survey questions (Pie Chart)
+        $tracerQuestions = TracerStudyQuestion::where('type', 'Tracer')->get();
+        $tracerPieChartData = $this->preparePieChartData($tracerQuestions, TracerStudyResponse::class);
+    
+        // Combine chart data
+        $chartData = [
+            'layananAlumni' => collect($layananAlumniChartData), // Bar Chart
+            'tracerStudy' => collect($tracerStudyChartData), // Bar Chart
+            'tracerPie' => collect($tracerPieChartData), // Pie Chart
+        ];
+    
         return view('landing', compact('chartData'));
     }
 
-    
+private function prepareChartData($questions, $responseModel, $values)
+{
+    $chartData = [];
+    foreach ($questions as $question) {
+        $responses = $responseModel::where('question_id', $question->id)
+            ->select('response_value', DB::raw('COUNT(*) as count'))
+            ->groupBy('response_value')
+            ->pluck('count', 'response_value');
+
+        // Ensure all response values are present
+        $counts = array_map(fn($val) => $responses[$val] ?? 0, $values);
+
+        $chartData[] = [
+            'question' => $question->text,
+            'labels' => $values,
+            'data' => $counts,
+        ];
+    }
+
+    return $chartData;
+}
+ 
+private function preparePieChartData($questions, $responseModel)
+{
+    $chartData = [];
+    foreach ($questions as $question) {
+        $responses = $responseModel::where('question_id', $question->id)
+            ->select('response_value', DB::raw('COUNT(*) as count'))
+            ->groupBy('response_value')
+            ->pluck('count', 'response_value');
+
+        $chartData[] = [
+            'question' => $question->text,
+            'labels' => $responses->keys()->toArray(),
+            'data' => $responses->values()->toArray(),
+        ];
+    }
+    return $chartData;
+}
 
     public function layananAlumni()
     {
@@ -128,7 +166,18 @@ class EvaluationController extends Controller
         return redirect()->back()->with('success', 'Data successfully imported!');
     }
 
+    public function importTracerStudy(Request $request)
+    {
+        // Validate the uploaded file
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv|max:2048',
+        ]);
 
+        // Import the file
+        Excel::import(new TracerStudyImport, $request->file('file'));
+
+        return redirect()->back()->with('success', 'Data successfully imported!');
+    }
     
 
     public function tracerStudy()
@@ -141,7 +190,7 @@ class EvaluationController extends Controller
         $options = TracerStudyOption::all()->groupBy('question_id');
     
         // Pass data to the view
-        return view('tracer.study', compact('groupedQuestions', 'options'));
+        return view('evaluasi.tracer', compact('groupedQuestions', 'options'));
     }
     
 
@@ -152,13 +201,13 @@ class EvaluationController extends Controller
             'responses' => 'required|array',
         ]);
 
-        // Map question IDs (type = User) to LayananAlumni columns
+        // Map question IDs (type = User) to TraceOn columns
         $userFieldMap = [
             1 => 'name',
             2 => 'prodi',
-            3 => 'tahun_lulus',
-            4 => 'department',
-            5 => 'divisi',
+            3 => 'divisi',
+            4 => 'tahun_lulus',
+            5 => 'department',
             6 => 'tempat',
             7 => 'plant',
 

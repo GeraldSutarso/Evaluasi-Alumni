@@ -1,86 +1,70 @@
 @extends('layout.main')
 
 @section('content')
-@if ($alreadySubmitted)
-<div class="container mt-4">
-    <br><br><br><br><br><br><br>
-    <div class="text-center mt-5">
-        <h1 class="display-4">Kamu sudah mengisi evaluasi pelayanan 👍</h1>
-        <p class="lead mt-3">Tidak perlu repot-repot mengisi ulang.</p>
-    </div>
-    <br><br><br><br><hr>
-    <!-- Back Button -->
-    <div>
-        <a class="btn btn-danger mt-4" href="{{ URL::previous() }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5"/>
-            </svg> Kembali
-        </a>
-    </div>
-</div>
-@elseif($summaryRecord->layanan_lock == 1)
-<div class="container mt-4">
-    <br><br><br><br><br><br><br>
-    <div class="text-center mt-5">
-        <h1><svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="#ff7900" class="bi bi-cone-striped" viewBox="0 0 16 16">
-            <path d="m9.97 4.88.953 3.811C10.159 8.878 9.14 9 8 9s-2.158-.122-2.923-.309L6.03 4.88C6.635 4.957 7.3 5 8 5s1.365-.043 1.97-.12m-.245-.978L8.97.88C8.718-.13 7.282-.13 7.03.88L6.275 3.9C6.8 3.965 7.382 4 8 4s1.2-.036 1.725-.098m4.396 8.613a.5.5 0 0 1 .037.96l-6 2a.5.5 0 0 1-.316 0l-6-2a.5.5 0 0 1 .037-.96l2.391-.598.565-2.257c.862.212 1.964.339 3.165.339s2.303-.127 3.165-.339l.565 2.257z"/>
-        </svg></h1>
-        <h1 class="display-4">Evaluasi layanan AKTI sedang ditutup,</h1>
-        <p class="lead mt-3"> silahkan coba lagi lain kali.</p>
-    </div>
-    <br><br><br><br><hr>
-    <!-- Back Button -->
-    <div>
-        <a class="btn btn-danger mt-4" href="{{ URL::previous() }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5"/>
-            </svg> Kembali
-        </a>
-    </div>
-</div>
-@else
-<div class="container mt-4">
-    <h2 class="mb-4">Evaluasi Layanan AKTI</h2>
-
-    <!-- Rating Scale Illustration -->
-    <div class="p-3 mb-4" style="border: 1px solid #ddd; border-radius: 8px; background-color: #f8f9fa;">
-        <h5 class="mb-3 text-center">Scaling Angka</h5>
-        <div class="rating-scale d-flex justify-content-between align-items-center" style="height: 30px; background: linear-gradient(to right, #ff9999, #ffcc66, #99cc99, #66b3ff); border-radius: 5px; position: relative;">
-            <span class="text-white fw-bold" style="position: absolute; left: 0; padding-left: 8px;">1 - Tidak Setuju</span>
-            <span class="text-white fw-bold" style="position: absolute; left: 25%;">2 - Kurang Setuju</span>
-            <span class="text-white fw-bold" style="position: absolute; left: 50%;">3 - Cukup Setuju</span>
-            <span class="text-white fw-bold" style="position: absolute; right: 0; padding-right: 8px;">4 - Sangat Setuju</span>
+<div class="container mx-auto mt-4">
+        <h2 class="mb-4 text-2xl font-bold text-gray-800 font-sans">Tracer Study Alumni AKTI</h2>
+        <!-- Rating Scale Illustration -->
+    <div class="block w-full p-4 mb-6 border-5 border-solid border-blue rounded-lg bg-gray-50 shadow-lg">
+        <h5 class="mb-3 text-lg font-semibold text-center">Scaling Angka</h5>
+        <div class="relative flex items-center h-8 bg-gradient-to-r from-red-400 via-yellow-400 to-green-400 rounded-md">
+            <span class="absolute left-0 pl-2 text-white font-semibold">1 - Tidak Setuju</span>
+            <span class="absolute left-1/4 text-white font-semibold">2 - Kurang Setuju</span>
+            <span class="absolute left-1/2 text-white font-semibold">3 - Cukup Setuju</span>
+            <span class="absolute right-0 pr-2 text-white font-semibold">4 - Sangat Setuju</span>
         </div>
-        <p class="mt-3 text-muted text-center">Skor yang lebih tinggi menunjukkan evaluasi yang lebih baik. Harap pilih penilaian anda dengan hati-hati.</p>
+        <p class="mt-3 text-sm text-center text-gray-600">Skor yang lebih tinggi menunjukkan evaluasi yang lebih baik. Harap pilih penilaian Anda dengan hati-hati.</p>
     </div>
 
     <!-- Multi-Step Form -->
-    <form id="layananForm" action="{{ route('layanan.submit') }}" method="POST">
+    <form id="layananForm" action="{{ route('tracer.submit') }}" method="POST" class="space-y-6">
         @csrf
 
         <!-- Steps Container -->
         <div id="stepsContainer">
             @php $stepIndex = 0; @endphp
             @foreach ($groupedQuestions as $type => $questions)
-                <div class="step" data-step-index="{{ $stepIndex }}" style="display: {{ $stepIndex === 0 ? 'block' : 'none' }};">
-                    <h3 class="mt-4 mb-3">{{ $type }}</h3>
+                <div class="step space-y-6" data-step-index="{{ $stepIndex }}" style="display: {{ $stepIndex === 0 ? 'block' : 'none' }};">
+                    <h3 class="text-xl font-semibold text-gray-700">{{ $type }}</h3>
                     @php $questionNumber = 1; @endphp
                     @foreach ($questions as $question)
-                        <div class="form-group mb-4">
-                            <label class="h5 d-block mb-2">{{ $questionNumber }}. {{ $question->text }}</label>
-                            @if ($loop->last && $question->type === 'Feedback')
-                                <!-- Text field for feedback question -->
-                                <textarea name="responses[{{ $question->id }}]" class="form-control" rows="3" required></textarea>
+                        <div class="mb-4">
+                            <label class="block mb-2 text-lg font-medium text-gray-800">
+                                {{ $questionNumber }}. {{ $question->text }}
+                            </label>
+                            @if ($question->type === 'Feedback')
+                                <!-- Textarea for feedback questions -->
+                                <textarea name="responses[{{ $question->id }}]" 
+                                          class="block w-full p-3 border border-solid border-black-700 rounded-lg focus:ring focus:ring-blue-300 shadow-lg" 
+                                          rows="3" 
+                                          required></textarea>
+                            @elseif ($question->type === 'User' || $question->type === 'Survey' || $question->type === 'Tracer')
+                                <!-- Render options dynamically if they exist -->
+                                @if (isset($options[$question->id]) && $options[$question->id]->isNotEmpty())
+                                    <div class="space-y-2">
+                                        @foreach ($options[$question->id] as $option)
+                                            <label class="flex items-center space-x-2">
+                                                <input type="radio" 
+                                                       name="responses[{{ $question->id }}]" 
+                                                       value="{{ $option->value }}" 
+                                                       class="w-4 h-4 text-blue-500 border-black-700 focus:ring-blue-500 shadow-lg" 
+                                                       required>
+                                                <span class="text-gray-700">{{ $option->value }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <!-- Fallback to text input for missing options -->
+                                    <input type="text" 
+                                           name="responses[{{ $question->id }}]" 
+                                           class="block w-full p-4 border-1 border-solid border-black rounded-lg focus:border-blue-600 focus:ring focus:ring-blue-300 shadow-lg bg-white-200"
+                                           required>
+                                @endif
                             @else
-                                <!-- Radio buttons for ratings 1 to 4 -->
-                                <div class="d-flex gap-3">
-                                    @for ($i = 1; $i <= 4; $i++)
-                                        <label class="form-check-label me-3">
-                                            <input type="radio" name="responses[{{ $question->id }}]" value="{{ $i }}" required class="form-check-input">
-                                            {{ $i }}
-                                        </label>
-                                    @endfor
-                                </div>
+                                <!-- Fallback to text input for other types -->
+                                <input type="text" 
+                                       name="responses[{{ $question->id }}]" 
+                                       class="block w-full p-3 border-3 border-solid border-black rounded-lg focus:ring focus:ring-blue-300 shadow-lg" 
+                                       required>
                             @endif
                         </div>
                         @php $questionNumber++; @endphp
@@ -91,23 +75,23 @@
         </div>
 
         <!-- Navigation Buttons -->
-        <div class="mt-4 d-flex justify-content-between">
-            <button type="button" id="prevButton" class="btn btn-secondary" style="display: none;">Sebelumnya</button>
-            <button type="button" id="nextButton" class="btn btn-primary">Lanjut</button>
-            <button type="submit" id="submitButton" class="btn btn-success" style="display: none;">Kumpul</button>
+        <div class="mt-6 flex justify-between">
+            <button type="button" id="prevButton" 
+                    class="hidden px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">
+                Sebelumnya
+            </button>
+            <button type="button" id="nextButton" 
+                    class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                Lanjut
+            </button>
+            <button type="submit" id="submitButton" 
+                    class="hidden px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
+                Kumpul
+            </button>
         </div>
-
     </form>
 </div>
 
-<!-- Back Button -->
-<div>
-    <a class="btn btn-danger mt-4" href="{{ URL::previous() }}">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5"/>
-        </svg> Kembali
-    </a>
-</div>
 
 <script>
     let currentStep = 0; // Initialize step index
@@ -174,5 +158,4 @@
     // Initialize button visibility
     updateButtonVisibility();
 </script>
-@endif
 @endsection

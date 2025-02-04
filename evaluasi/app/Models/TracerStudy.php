@@ -14,8 +14,14 @@ class TracerStudy extends Model
     protected $fillable = [
         'id',
         'name',
+        'prodi',
         'divisi',
         'tahun_lulus',
+        'department',
+        'tempat',
+        'plant',
+        'created_at',
+        'updated_at',
     ];
 
     public function responses()

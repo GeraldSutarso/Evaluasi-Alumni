@@ -9,6 +9,7 @@ class TracerStudyQuestion extends Model
     use HasFactory;
 
     protected $table = 'tracer_study_questions';
+    public $timestamps = false;
 
     protected $fillable = [
         'id',
