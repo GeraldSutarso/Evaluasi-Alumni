@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TracerStudyQuestion;
+use App\Models\TracerStudyOption;
 
 
 
@@ -83,4 +84,48 @@ class TracerQuestionsController extends Controller
         $question->delete();
         return response()->json(['success' => true]);
     }
+
+    // Adds a new option to a question
+    public function addOption(Request $request, $questionId)
+    {
+        $request->validate([
+            'value' => 'required|string|max:1000'
+        ]);
+
+        $question = TracerStudyQuestion::findOrFail($questionId);
+        $option = $question->options()->create(['value' => $request->value]);
+
+        return response()->json(['success' => true, 'option' => $option]);
+    }
+
+    // Updates an existing option
+    public function updateOption(Request $request, $optionId)
+    {
+        $request->validate([
+            'value' => 'required|string|max:1000'
+        ]);
+
+        $option = TracerStudyOption::findOrFail($optionId);
+        $option->update(['value' => $request->value]);
+
+        return response()->json(['success' => true, 'option' => $option]);
+    }
+
+    // Deletes an option
+    public function destroyOption($optionId)
+    {
+        $option = TracerStudyOption::findOrFail($optionId);
+        $question = $option->question;
+
+        $option->delete();
+
+        // Optionally, if the question now has no options, you might decide to remove it from display:
+        // if ($question->options()->count() == 0) {
+        //     $question->delete();
+        // }
+
+        return response()->json(['success' => true]);
+    }
+
+
 }

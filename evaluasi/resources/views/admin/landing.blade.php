@@ -58,7 +58,7 @@
                     <button 
                         onclick="showModal('tracerStudyModal')" 
                         class="mt-2 px-6 py-2 bg-[#992424] text-white rounded-lg hover:bg-[#b93232] transition-colors">
-                        Mulai Survey
+                        Cek Survey
                     </button>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                     <button 
                         onclick="showModal('evaluasiLayananModal')" 
                         class="mt-2 px-6 py-2 bg-[#992424] text-white rounded-lg hover:bg-[#b93232] transition-colors">
-                        Mulai Survey
+                        Cek Survey
                     </button>
                 </div>
             </div>
@@ -104,7 +104,7 @@
                     class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
                     Batal
                 </button>
-                <a href="{{ route('tracer.study') }}" 
+                <a href="{{ route('tracer.questions.index') }}" 
                 class="px-4 py-2 bg-[#992424] text-white rounded-lg hover:bg-[#b93232]">
                     Lanjutkan
                 </a>
@@ -126,7 +126,7 @@
                         class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
                         Batal
                     </button>
-                    <a href="{{ route('layanan-alumni') }}" 
+                    <a href="{{ route('layanan.questions.index') }}" 
                     class="px-4 py-2 bg-[#992424] text-white rounded-lg hover:bg-[#b93232]">
                         Lanjutkan
                     </a>

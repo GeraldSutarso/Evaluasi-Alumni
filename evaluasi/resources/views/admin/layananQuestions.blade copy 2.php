@@ -11,7 +11,6 @@
         <select id="filterType" class="form-select">
             <option value="">All</option>
             <option value="User">User</option>
-            <option value="Tracer">Tracer</option>
             <option value="Survey">Survey</option>
             <option value="Feedback">Feedback</option>
             {{-- @foreach ($types as $type)
@@ -45,7 +44,6 @@
                 <label for="typeModal" class="block text-gray-700">Question Type</label>
                 <select id="typeModal" name="type" class="w-full p-2 border border-gray-300 rounded-md" required>
                     <option value="User">User</option>
-                    <option value="Tracer">Tracer</option>
                     <option value="Survey">Survey</option>
                     <option value="Feedback">Feedback</option>
                 </select>
@@ -70,7 +68,6 @@
                 <label for="editTypeModal" class="block text-gray-700">Question Type</label>
                 <select id="editTypeModal" name="type" class="w-full p-2 border border-gray-300 rounded-md" required>
                     <option value="User">User</option>
-                    <option value="Tracer">Tracer</option>
                     <option value="Survey">Survey</option>
                     <option value="Feedback">Feedback</option>
                 </select>
@@ -87,7 +84,7 @@
         <form id="addOptionFormModal">
             <div class="mb-4">
                 <label for="optionValue" class="block text-gray-700">Option Text</label>
-                <input type="text" id="optionValue" name="value" class="w-full p-2 border border-gray-300 rounded-md" required>
+                <input type="text" id="optionValue" name="text" class="w-full p-2 border border-gray-300 rounded-md" required>
             </div>
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Add Option</button>
             <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-md mt-2" id="cancelAddOptionModal">Cancel</button>
@@ -103,7 +100,7 @@
             <input type="hidden" id="editOptionId" name="id">
             <div class="mb-4">
                 <label for="editOptionValue" class="block text-gray-700">Option Text</label>
-                <input type="text" id="editOptionValue" name="value" class="w-full p-2 border border-gray-300 rounded-md" required>
+                <input type="text" id="editOptionValue" name="text" class="w-full p-2 border border-gray-300 rounded-md" required>
             </div>
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Save Changes</button>
             <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-md mt-2" id="cancelEditOptionModal">Cancel</button>
@@ -116,6 +113,164 @@
 
 @section('scripts')
 <script>
+// document.addEventListener('DOMContentLoaded', function () {
+//     // Option modal elements
+//     const addOptionModal = document.getElementById('addOptionModal');
+//     const editOptionModal = document.getElementById('editOptionModal');
+//     const addOptionFormModal = document.getElementById('addOptionFormModal');
+//     const editOptionFormModal = document.getElementById('editOptionFormModal');
+
+//     // Utility functions to show/hide modals manually (if not using Bootstrap)
+//     function showModal(modal) {
+//         modal.classList.remove('hidden');
+//         document.body.classList.add('overflow-hidden');
+//     }
+//     function hideModal(modal) {
+//         modal.classList.add('hidden');
+//         document.body.classList.remove('overflow-hidden');
+//     }
+
+//     // Listen for "Add Option" button clicks (delegated)
+//     document.addEventListener('click', function(e) {
+//         if (e.target.closest('.add-option-btn')) {
+//             const btn = e.target.closest('.add-option-btn');
+//             const questionId = btn.getAttribute('data-question-id');
+//             // Store questionId in a data attribute on the addOptionForm
+//             addOptionFormModal.setAttribute('data-question-id', questionId);
+//             showModal(addOptionModal);
+//         }
+//     });
+
+//     // Cancel add option
+//     document.getElementById('cancelAddOptionModal').addEventListener('click', function() {
+//         hideModal(addOptionModal);
+//     });
+
+//     // Add Option Form submission
+//     addOptionFormModal.addEventListener('submit', function(e) {
+//         e.preventDefault();
+//         const formData = new FormData(addOptionFormModal);
+//         // Note: Ensure the input field name is "value" in your form.
+//         const questionId = addOptionFormModal.getAttribute('data-question-id');
+
+//         // Build the URL dynamically
+//         const url = `{{ route('layanan.questions.options.store', ':questionId') }}`.replace(':questionId', questionId);
+
+//         fetch(url, {
+//             method: 'POST',
+//             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+//             body: formData,
+//         })
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.success) {
+//                 // Find the corresponding question row by data-id
+//                 const questionRow = document.querySelector(`tr[data-id="${questionId}"]`);
+//                 // Assume the options column is the 4th <td> (adjust if necessary)
+//                 const optionsCell = questionRow.querySelector('td:nth-child(4)');
+
+//                 // Check if an unordered list exists; if not, create it
+//                 let optionsList = optionsCell.querySelector('ul.list-unstyled');
+//                 if (!optionsList) {
+//                     optionsList = document.createElement('ul');
+//                     optionsList.className = 'list-unstyled mb-0';
+//                     optionsCell.innerHTML = ''; // Clear any "No options" text
+//                     optionsCell.appendChild(optionsList);
+//                 }
+                
+//                 // Create a new <li> element for the added option, using 'value'
+//                 const li = document.createElement('li');
+//                 li.setAttribute('data-option-id', data.option.id);
+//                 li.innerHTML = `<span class="option-text">${data.option.value}</span>
+//                                 <button class="btn btn-sm btn-warning edit-option-btn">Edit</button>
+//                                 <button class="btn btn-sm btn-danger delete-option-btn">Delete</button>`;
+                
+//                 // Append the new option to the list
+//                 optionsList.appendChild(li);
+                
+//                 // Clear the form and hide the modal dynamically without reloading the page
+//                 addOptionFormModal.reset();
+//                 hideModal(addOptionModal); // Assumes you have a hideModal() function
+//             } else {
+//                 alert('Failed to add option');
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Error:', error);
+//             alert('An unexpected error occurred.');
+//         });
+//     });
+
+//     // Listen for "Edit Option" button clicks (delegated)
+//     document.addEventListener('click', function(e) {
+//     if (e.target.closest('.edit-option-btn')) {
+//         const li = e.target.closest('li');
+//         const optionId = li.getAttribute('data-option-id');
+//         // Get the option text from the span
+//         const currentTextElement = li.querySelector('.option-text');
+//         const currentText = currentTextElement ? currentTextElement.textContent.trim() : '';
+//         document.getElementById('editOptionId').value = optionId;
+//         document.getElementById('editOptionValue').value = currentText;
+//         showModal(editOptionModal);
+//     }
+// });
+
+
+//     // Cancel edit option
+//     document.getElementById('cancelEditOptionModal').addEventListener('click', function() {
+//         hideModal(editOptionModal);
+//     });
+
+//     // Edit Option Form submission
+//     editOptionFormModal.addEventListener('submit', function(e) {
+//         e.preventDefault();
+//         const formData = new FormData(editOptionFormModal);
+//         const optionId = document.getElementById('editOptionId').value;
+
+//         fetch(`{{ route('layanan.questions.options.update', ':optionId') }}`.replace(':optionId', optionId), {
+//             method: 'POST',
+//             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+//             body: formData,
+//         })
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.success) {
+//                 hideModal(editOptionModal);
+//                 location.reload(); // Or update the option text on the page dynamically.
+//             } else {
+//                 alert('Failed to update option');
+//             }
+//         });
+//     });
+
+//     // Listen for "Delete Option" button clicks (delegated)
+//     document.addEventListener('click', function(e) {
+//         if (e.target.closest('.delete-option-btn')) {
+//             const li = e.target.closest('li');
+//             const optionId = li.getAttribute('data-option-id');
+//             if (confirm('Are you sure you want to delete this option?')) {
+//                 fetch(`{{ route('layanan.questions.options.destroy', ':optionId') }}`.replace(':optionId', optionId), {
+//                     method: 'DELETE',
+//                     headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+//                 })
+//                 .then(response => response.json())
+//                 .then(data => {
+//                     if (data.success) {
+//                         li.remove();
+//                         // Optionally, if after deletion, the question has no options,
+//                         // you might choose to remove the entire question row.
+//                     } else {
+//                         alert('Failed to delete option');
+//                     }
+//                 });
+//             }
+//         }
+//     });
+
+// });
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const addQuestionFormModal = document.getElementById('addQuestionFormModal');
     const editQuestionFormModal = document.getElementById('editQuestionFormModal');
@@ -127,10 +282,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const questionsContainer = document.getElementById('questionsContainer');
 
     const routes = {
-        store: "{{ route('tracer.questions.store') }}",
-        edit: "{{ route('tracer.questions.edit', ':id') }}",
-        update: "{{ route('tracer.questions.update', ':id') }}",
-        destroy: "{{ route('tracer.questions.destroy', ':id') }}",
+        store: "{{ route('layanan.questions.store') }}",
+        edit: "{{ route('layanan.questions.edit', ':id') }}",
+        update: "{{ route('layanan.questions.update', ':id') }}",
+        destroy: "{{ route('layanan.questions.destroy', ':id') }}",
     };
     editQuestionFormModal.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -228,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Handle filter change
     filterType.addEventListener('change', function () {
         const type = this.value;
-        const url = new URL('/admin/tracer-study/questions', window.location.origin);
+        const url = new URL('/admin/layanan-alumni/questions', window.location.origin);
         if (type) {
             url.searchParams.set('type', type);
         }
@@ -336,9 +491,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
     });
-
     // Add Option Functionality
-    document.addEventListener('click', function(e) {
+document.addEventListener('click', function(e) {
     if (e.target.classList.contains('add-option-btn')) {
         const questionId = e.target.dataset.questionId;
         document.getElementById('addOptionModal').dataset.questionId = questionId;
@@ -353,85 +507,53 @@ document.getElementById('cancelAddOptionModal').addEventListener('click', functi
 document.getElementById('addOptionFormModal').addEventListener('submit', function(e) {
     e.preventDefault();
     const questionId = document.getElementById('addOptionModal').dataset.questionId;
-    const formData = new FormData(this); // This formData now has a field named "value"
+    const formData = new FormData(this);
     
-    fetch(`/admin/tracer-study/questions/${questionId}/options`, {
+    fetch(`/questions/${questionId}/options`, {
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-            // Do not set Content-Type manually when sending FormData
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: formData
+        body: JSON.stringify({ value: formData.get('text') })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Update the DOM dynamically
-            // Save a reference to the "Add Option" button before modifying the cell
-            const questionRow = document.querySelector(`tr[data-id="${questionId}"]`);
-            const td = questionRow.querySelector('td:nth-child(4)');
-            const addOptionBtn = td.querySelector('.add-option-btn'); // Save the button reference
-
-            // Check if there is already an unordered list for options
-            let optionsList = td.querySelector('ul.list-unstyled');
-            if (!optionsList) {
-                // Create a new UL element and clear existing content (e.g., "No options" span)
-                optionsList = document.createElement('ul');
-                optionsList.className = 'list-unstyled mb-0';
-                td.innerHTML = ''; // Clear all content in the cell
-                td.appendChild(optionsList);
-            }
-            
-            // Create a new <li> element for the new option
+            const optionsList = document.querySelector(`tr[data-id="${questionId}"] ul`);
             const newOption = document.createElement('li');
             newOption.dataset.optionId = data.option.id;
             newOption.innerHTML = `
                 <span class="option-text">• ${data.option.value}</span>
-                <button class="btn btn-sm btn-warning edit-option-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                    </svg>
-                </button>
-                <button class="btn btn-sm btn-danger delete-option-btn mt-1 mb-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                    </svg>
-                </button>
-                <hr>
+                <button class="btn btn-sm btn-warning edit-option-btn">Edit</button>
+                <button class="btn btn-sm btn-danger delete-option-btn">Delete</button>
             `;
-
-            // Append the new option
-            optionsList.appendChild(newOption);
             
-            // Append the "Add Option" button if it exists
-            if (addOptionBtn) {
-                td.appendChild(addOptionBtn);
+            if (optionsList) {
+                optionsList.appendChild(newOption);
+            } else {
+                const td = document.querySelector(`tr[data-id="${questionId}"] td:nth-child(4)`);
+                const ul = document.createElement('ul');
+                ul.className = 'list-unstyled mb-0';
+                ul.appendChild(newOption);
+                td.innerHTML = '';
+                td.appendChild(ul);
+                td.appendChild(document.querySelector(`tr[data-id="${questionId}"] .add-option-btn`));
             }
             
-            // Hide the modal and reset the form
             document.getElementById('addOptionModal').classList.add('hidden');
             this.reset();
-        } else {
-            alert('Failed to add option');
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An unexpected error occurred.');
     });
 });
 
 // Edit Option Functionality
 document.addEventListener('click', function(e) {
-    const editBtn = e.target.closest('.edit-option-btn');
-    if (editBtn) {
-        const optionItem = editBtn.closest('li');
+    if (e.target.classList.contains('edit-option-btn')) {
+        const optionItem = e.target.closest('li');
         const optionId = optionItem.dataset.optionId;
-        // Retrieve only the text from the designated span (avoiding SVG text)
-        const optionTextElement = optionItem.querySelector('.option-text');
-        const optionText = optionTextElement ? optionTextElement.textContent.replace('• ', '') : '';
+        const optionText = optionItem.querySelector('.option-text').textContent.replace('• ', '');
         
         document.getElementById('editOptionId').value = optionId;
         document.getElementById('editOptionValue').value = optionText;
@@ -445,17 +567,17 @@ document.getElementById('cancelEditOptionModal').addEventListener('click', funct
 
 document.getElementById('editOptionFormModal').addEventListener('submit', function(e) {
     e.preventDefault();
-    const formData = new FormData(this);
-    formData.append('_method', 'PUT'); // Spoof the PUT method
     const optionId = document.getElementById('editOptionId').value;
+    const formData = new FormData(this);
     
-    fetch(`/admin/tracer-study/options/${optionId}`, {  // Make sure the URL is correct (including prefix if needed)
-        method: 'POST', // Use POST with _method spoofing
-        headers: { 
+    fetch(`/options/${optionId}`, {
+        method: 'PUT',
+        headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: formData
+        body: JSON.stringify({ value: formData.get('text') })
     })
     .then(response => response.json())
     .then(data => {
@@ -464,66 +586,65 @@ document.getElementById('editOptionFormModal').addEventListener('submit', functi
             optionItem.querySelector('.option-text').textContent = `• ${data.option.value}`;
             document.getElementById('editOptionModal').classList.add('hidden');
             this.reset();
-        } else {
-            alert('Failed to update option');
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An unexpected error occurred.');
     });
 });
 
-// Delete Option Functionality using closest()
+// Delete Option Functionality
 document.addEventListener('click', function(e) {
-    const deleteBtn = e.target.closest('.delete-option-btn');
-    if (deleteBtn) {
-        const optionItem = deleteBtn.closest('li');
+    if (e.target.classList.contains('delete-option-btn')) {
+        const optionItem = e.target.closest('li');
         const optionId = optionItem.dataset.optionId;
         
-        
         if (confirm('Are you sure you want to delete this option?')) {
-            fetch(`/admin/tracer-study/options/${optionId}`, {
+            fetch(`/options/${optionId}`, {
                 method: 'DELETE',
-                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Get the parent cell (td) that contains the options list and the add option button.
-                    const td = optionItem.closest('td');
-                    
-                    // Save a reference to the "Add Option" button (if it exists)
-                    const addOptionBtn = td.querySelector('.add-option-btn');
-                    
-                    // Remove the option item from the list.
+                    const optionsList = optionItem.parentElement;
                     optionItem.remove();
                     
-                    // Check if the unordered list still exists and if it has any children.
-                    const optionsList = td.querySelector('ul.list-unstyled');
-                    if (!optionsList || optionsList.children.length === 0) {
-                        // If no options remain, set the cell's inner HTML to a "No options" placeholder.
-                        // Then, if an add option button exists, append it.
-                        td.innerHTML = '<span class="text-muted">Tidak ada opsi</span>';
-                        if (addOptionBtn) {
-                            td.appendChild(addOptionBtn);
-                        }
+                    // Remove entire list if no options left
+                    if (optionsList.children.length === 0) {
+                        const td = optionsList.parentElement;
+                        td.innerHTML = '<span class="text-muted">No options</span>';
+                        td.appendChild(document.querySelector(`tr[data-id="${td.parentElement.dataset.id}"] .add-option-btn`));
                     }
-                } else {
-                    alert('Failed to delete option');
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An unexpected error occurred.');
             });
         }
     }
 });
-
 });
 window.addEventListener('popstate', function() {
     fetchQuestions(window.location.href);
 });
+    // questionsTable.addEventListener('click', function (e) {
+    //     if (e.target.classList.contains('delete-btn')) {
+    //         const row = e.target.closest('tr');
+    //         const questionId = row.getAttribute('data-id');
+
+    //         if (confirm('Are you sure you want to delete this question?')) {
+    //             fetch(routes.destroy.replace(':id', questionId), {
+    //                 method: 'DELETE',
+    //                 headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+    //             })
+    //                 .then(response => response.json())
+    //                 .then(data => {
+    //                     if (data.success) {
+    //                         showMessage('success', 'Question deleted successfully.');
+    //                         row.remove();
+    //                     } else {
+    //                         showMessage('error', 'Failed to delete question.');
+    //                     }
+    //                 });
+    //         }
+    //     }
+    // });
 </script>
 @endsection
