@@ -32,53 +32,84 @@
     <!-- Content Container -->
     <div class="relative z-10 container mx-auto px-4 py-8">
       <h1 class="text-4xl font-semibold font-mono text-center text-white mb-8">Survey Alumni</h1>
-{{-- 
-        <form action="{{ route('layanan.alumni.import') }}" method="POST" enctype="multipart/form-data">
+
+        {{-- <form action="{{ route('layanan.alumni.import') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <input type="file" name="file" required>
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Import Data</button>
+        </form>
+
+        <form action="{{ route('tracer.study.import') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="file" name="file" required>
             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Import Data</button>
         </form> --}}
 
-        {{-- <form action="{{ route('tracer.study.import') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <input type="file" name="file" required>
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Import Data</button>
-        </form> --}}
 
-
-                <!-- Cards Section -->
         <div class="flex flex-col md:flex-row justify-center items-center gap-8 mb-16 mt-8">
-            <!-- Tracer Study Card -->
-            <div class="w-full sm:w-[300px] md:w-[300px] lg:w-[300px] h-[275px] bg-white bg-opacity-90 rounded-3xl shadow-lg p-8 transition-transform hover:scale-105">
-                <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Tracer Study</h2>
-                <div class="flex justify-center mb-4">
-                    <img src="{{ asset('img/analysis.png') }}" alt="Tracer Study Icon" class="w-16 h-16 mb-1">
-                </div>
-                <div class="flex justify-center">
-                    <button 
-                        onclick="showModal('tracerStudyModal')" 
-                        class="mt-2 px-6 py-2 bg-[#992424] text-white rounded-lg hover:bg-[#b93232] transition-colors">
-                        Cek Survey
-                    </button>
-                </div>
-            </div>
-
-            <!-- Evaluasi Layanan Card -->
-            <div class="w-full sm:w-[300px] md:w-[300px] lg:w-[300px] h-[275px] bg-white bg-opacity-90 rounded-3xl shadow-lg p-8 transition-transform hover:scale-105">
+            <!-- Evaluasi Layanan Card (Combined functionality) -->
+            <div class="w-full sm:w-[300px] md:w-[300px] lg:w-[300px] bg-white bg-opacity-90 rounded-3xl shadow-lg p-8 transition-transform hover:scale-105">
                 <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Evaluasi Layanan</h2>
                 <div class="flex justify-center mb-4">
                     <img src="{{ asset('img/check-list.png') }}" alt="Evaluasi Layanan Icon" class="w-16 h-16 mb-1">
                 </div>
-                <div class="flex justify-center">
-                    <button 
-                        onclick="showModal('evaluasiLayananModal')" 
-                        class="mt-2 px-6 py-2 bg-[#992424] text-white rounded-lg hover:bg-[#b93232] transition-colors">
-                        Cek Survey
-                    </button>
+                <!-- Container for two rows -->
+                <div class="flex flex-col gap-4">
+                    <!-- Row 1: "Cek Survey" button -->
+                    <div class="flex justify-center">
+                        <button 
+                            onclick="showModal('evaluasiLayananModal')" 
+                            class="px-6 py-2 bg-[#992424] text-white rounded-lg hover:bg-[#b93232] transition-colors">
+                            Modifikasi Survey
+                        </button>
+                    </div>
+                    <!-- Row 2: File input and Import form -->
+                    <div class="flex justify-center">
+                        <form action="{{ route('layanan.alumni.import') }}" method="POST" enctype="multipart/form-data" class="w-full">
+                            @csrf
+                            <div class="mb-2">
+                                <input type="file" name="file" class="form-control" required>
+                            </div>
+                            <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white rounded">
+                                Import Data
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Tracer Study Card (Combined functionality) -->
+            <div class="w-full sm:w-[300px] md:w-[300px] lg:w-[300px] bg-white bg-opacity-90 rounded-3xl shadow-lg p-8 transition-transform hover:scale-105">
+                <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">Tracer Study</h2>
+                <div class="flex justify-center mb-4">
+                    <img src="{{ asset('img/analysis.png') }}" alt="Tracer Study Icon" class="w-16 h-16 mb-1">
+                </div>
+                <!-- Container for two rows -->
+                <div class="flex flex-col gap-4">
+                    <!-- Row 1: "Cek Survey" button -->
+                    <div class="flex justify-center">
+                        <button 
+                            onclick="showModal('tracerStudyModal')" 
+                            class="px-6 py-2 bg-[#992424] text-white rounded-lg hover:bg-[#b93232] transition-colors">
+                            Modifikasi Survey
+                        </button>
+                    </div>
+                    <!-- Row 2: File input and Import form -->
+                    <div class="flex justify-center">
+                        <form action="{{ route('tracer.study.import') }}" method="POST" enctype="multipart/form-data" class="w-full">
+                            @csrf
+                            <div class="mb-2">
+                                <input type="file" name="file" class="form-control" required>
+                            </div>
+                            <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white rounded">
+                                Import Data
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-
+        
 
         <!-- Modals -->
 
@@ -226,6 +257,50 @@
                     <canvas id="tracerPieChart{{ $index }}"></canvas>
                 </div>
             </div>
+            @endforeach
+        </div>
+    </div>
+    <!-- Feedback Responses Section -->
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-semibold font-mono text-center text-white mb-8">Feedback Responses</h1>
+        <!-- Tabs for Layanan Alumni Feedback and Tracer Study Feedback -->
+        <div class="flex justify-center mb-4">
+            <button id="feedbackLayananTab" class="tab-button active-tab px-4 py-2 bg-red-900 text-white rounded-l-lg hover:bg-red-950 transition-colors">Layanan Alumni</button>
+            <button id="feedbackTracerTab" class="tab-button px-4 py-2 bg-red-900 text-white rounded-r-lg hover:bg-red-950 transition-colors">Tracer Study</button>
+        </div>
+
+        <!-- Layanan Alumni Feedback Card -->
+        <div id="feedbackLayananCard">
+            @foreach ($chartData['feedbackLayanan'] as $feedback)
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6 max-w-5xl mx-auto">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">{{ $feedback['question'] }}</h2>
+                    <!-- Container with fixed height and scrollable overflow -->
+                    <div class="max-h-80 overflow-y-auto divide-y divide-gray-300">
+                        @foreach ($feedback['responses'] as $response)
+                            <div class="py-2">
+                                <p class="font-semibold text-gray-700">{{ $response->alumni->name ?? 'Unknown' }}</p>
+                                <p class="text-gray-600">{{ $response->response_value }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <!-- Tracer Study Feedback Card (Hidden by default) -->
+        <div id="feedbackTracerCard" class="hidden">
+            @foreach ($chartData['feedbackTracer'] as $feedback)
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6 max-w-5xl mx-auto">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">{{ $feedback['question'] }}</h2>
+                    <div class="max-h-80 overflow-y-auto divide-y divide-gray-300">
+                        @foreach ($feedback['responses'] as $response)
+                            <div class="py-2">
+                                <p class="font-semibold text-gray-700">{{ $response->alumni->name ?? 'Unknown' }}</p>
+                                <p class="text-gray-600">{{ $response->response_value }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
             @endforeach
         </div>
     </div>
@@ -425,5 +500,25 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     });
+    document.addEventListener('DOMContentLoaded', function () {
+    const feedbackLayananTab = document.getElementById('feedbackLayananTab');
+    const feedbackTracerTab = document.getElementById('feedbackTracerTab');
+    const feedbackLayananCard = document.getElementById('feedbackLayananCard');
+    const feedbackTracerCard = document.getElementById('feedbackTracerCard');
+
+    feedbackLayananTab.addEventListener('click', function () {
+        feedbackLayananCard.classList.remove('hidden');
+        feedbackTracerCard.classList.add('hidden');
+        feedbackLayananTab.classList.add('active-tab');
+        feedbackTracerTab.classList.remove('active-tab');
+    });
+
+    feedbackTracerTab.addEventListener('click', function () {
+        feedbackTracerCard.classList.remove('hidden');
+        feedbackLayananCard.classList.add('hidden');
+        feedbackTracerTab.classList.add('active-tab');
+        feedbackLayananTab.classList.remove('active-tab');
+    });
+});
 </script>
 @endsection

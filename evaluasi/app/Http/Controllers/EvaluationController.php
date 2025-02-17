@@ -23,7 +23,7 @@ class EvaluationController extends Controller
 
     public function landingPage(Request $request)
     {
-        Session::put('admin_alumni', true);
+        // Session::put('admin_alumni', true);
     
         // Fetch Layanan Alumni survey questions (Bar Chart)
         $layananAlumniQuestions = LayananAlumniQuestion::where('type', 'Survey')->get();

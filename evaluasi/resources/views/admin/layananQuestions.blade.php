@@ -2,14 +2,15 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6">Manage Questions</h1>
+    <img src="{{ asset('img/check-list.png') }}" alt="Evaluasi Layanan Icon" class="w-16 h-16 mb-1">
+    <h1 class="text-2xl font-bold mb-6">Modifikasi Survey Layanan AKTI Oleh Alumni</h1>
 
     <!-- Success/Error Messages -->
     <div id="messages" class="hidden mb-4 p-4 rounded-lg"></div>
     <div class="mb-4">
-        <label for="filterType" class="form-label">Filter by Type:</label>
+        <label for="filterType" class="form-label">Filter dari Tipe:</label>
         <select id="filterType" class="form-select">
-            <option value="">All</option>
+            <option value="">Semua</option>
             <option value="User">User</option>
             <option value="Survey">Survey</option>
             <option value="Feedback">Feedback</option>
@@ -22,7 +23,7 @@
     </div>
 
     <!-- Add New Question Button -->
-    <button id="openAddModal" class="bg-blue-500 text-white px-4 py-2 rounded-md mb-6">Add New Question</button>
+    <button id="openAddModal" class="bg-blue-500 text-white px-4 py-2 rounded-md mb-6">Tambah Pertanyaan</button>
 
     <!-- Table and Pagination -->
     <div id="questionsContainer">
@@ -34,21 +35,21 @@
 <!-- Add New Question Modal -->
 <div id="addQuestionModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 class="text-lg font-semibold mb-4">Add New Question</h2>
+        <h2 class="text-lg font-semibold mb-4">Tambah Pertanyaan</h2>
         <form id="addQuestionFormModal">
             <div class="mb-4">
-                <label for="textModal" class="block text-gray-700">Question Text</label>
+                <label for="textModal" class="block text-gray-700">Teks Pertanyaan</label>
                 <input type="text" id="textModal" name="text" class="w-full p-2 border border-gray-300 rounded-md" required>
             </div>
             <div class="mb-4">
-                <label for="typeModal" class="block text-gray-700">Question Type</label>
+                <label for="typeModal" class="block text-gray-700">Tipe Pertanyaan</label>
                 <select id="typeModal" name="type" class="w-full p-2 border border-gray-300 rounded-md" required>
                     <option value="User">User</option>
                     <option value="Survey">Survey</option>
                     <option value="Feedback">Feedback</option>
                 </select>
             </div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Add Question</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Tambah</button>
             <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-md mt-2" id="cancelAddModal">Cancel</button>
         </form>
     </div>
@@ -57,22 +58,22 @@
 <!-- Edit Question Modal -->
 <div id="editQuestionModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 class="text-lg font-semibold mb-4">Edit Question</h2>
+        <h2 class="text-lg font-semibold mb-4">Edit Pertanyaan</h2>
         <form id="editQuestionFormModal">
             <input type="hidden" id="editQuestionId" name="id">
             <div class="mb-4">
-                <label for="editTextModal" class="block text-gray-700">Question Text</label>
+                <label for="editTextModal" class="block text-gray-700">Text Pertanyaan</label>
                 <input type="text" id="editTextModal" name="text" class="w-full p-2 border border-gray-300 rounded-md" required>
             </div>
             <div class="mb-4">
-                <label for="editTypeModal" class="block text-gray-700">Question Type</label>
+                <label for="editTypeModal" class="block text-gray-700">Tipe Pertanyaan</label>
                 <select id="editTypeModal" name="type" class="w-full p-2 border border-gray-300 rounded-md" required>
                     <option value="User">User</option>
                     <option value="Survey">Survey</option>
                     <option value="Feedback">Feedback</option>
                 </select>
             </div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Save Changes</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Save</button>
             <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-md mt-2" id="cancelEditModal">Cancel</button>
         </form>
     </div>
@@ -80,13 +81,13 @@
 
 <div id="addOptionModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 class="text-lg font-semibold mb-4">Add Option</h2>
+        <h2 class="text-lg font-semibold mb-4">Tambah Opsi</h2>
         <form id="addOptionFormModal">
             <div class="mb-4">
-                <label for="optionValue" class="block text-gray-700">Option Text</label>
+                <label for="optionValue" class="block text-gray-700">Teks Opsi</label>
                 <input type="text" id="optionValue" name="value" class="w-full p-2 border border-gray-300 rounded-md" required>
             </div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Add Option</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Tambah</button>
             <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-md mt-2" id="cancelAddOptionModal">Cancel</button>
         </form>
     </div>
@@ -95,14 +96,14 @@
 
 <div id="editOptionModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 class="text-lg font-semibold mb-4">Edit Option</h2>
+        <h2 class="text-lg font-semibold mb-4">Edit Opsi</h2>
         <form id="editOptionFormModal">
             <input type="hidden" id="editOptionId" name="id">
             <div class="mb-4">
-                <label for="editOptionValue" class="block text-gray-700">Option Text</label>
+                <label for="editOptionValue" class="block text-gray-700">Teks Opsi</label>
                 <input type="text" id="editOptionValue" name="value" class="w-full p-2 border border-gray-300 rounded-md" required>
             </div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Save Changes</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Save</button>
             <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-md mt-2" id="cancelEditOptionModal">Cancel</button>
         </form>
     </div>
